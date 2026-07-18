@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { awsServices, getService } from "@/data/aws-services";
+import { IamQuizCallout } from "@/components/progress/iam-quiz-callout";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -51,7 +52,7 @@ export default async function ServiceTutorial({ params }: PageProps) {
           </div>
         </div>
 
-        <section className="rounded-2xl border border-sky-400/20 bg-gradient-to-r from-sky-400/10 to-indigo-400/5 p-6 sm:p-8">
+        {service.slug === "iam" ? <IamQuizCallout /> : <section className="rounded-2xl border border-sky-400/20 bg-gradient-to-r from-sky-400/10 to-indigo-400/5 p-6 sm:p-8">
           <p className="text-sm font-semibold text-sky-300">Co dalej?</p>
           <h2 className="mt-2 text-2xl font-semibold text-white">{nextService ? `Kontynuuj naukę z ${nextService.name}` : "Podstawy ukończone"}</h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">{nextService ? nextService.shortDescription : "Wróć do ścieżki i utrwal poznane usługi. Kolejne formaty nauki pojawią się w następnych wersjach."}</p>
@@ -59,7 +60,7 @@ export default async function ServiceTutorial({ params }: PageProps) {
             <Link href={nextService ? `/learn/${nextService.slug}` : "/#sciezka"} className="rounded-lg bg-sky-400 px-5 py-3 text-center text-sm font-semibold text-slate-950 transition hover:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400">{nextService ? `Przejdź do ${nextService.name}` : "Zakończ podstawy"}</Link>
             <Link href="/#uslugi" className="rounded-lg border border-white/15 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400">Wróć do wszystkich usług</Link>
           </div>
-        </section>
+        </section>}
       </div>
     </main>
   );

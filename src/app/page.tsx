@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { LearningStep } from "@/components/learning-step";
-import { ServiceCard } from "@/components/service-card";
+import { FoundationsServiceGrid } from "@/components/progress/foundations-service-grid";
 import { TrackPreview } from "@/components/track-preview";
 import { awsServices } from "@/data/aws-services";
 
@@ -37,7 +37,7 @@ export default function Home() {
           <p className="text-sm font-semibold text-sky-300">Zbuduj solidne fundamenty</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Podstawowe usługi AWS</h2>
           <p className="mt-4 max-w-2xl leading-7 text-slate-400">Zacznij od fundamentów. Każdy moduł wyjaśnia najważniejsze pojęcia, zastosowania i typowe problemy.</p>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{awsServices.map((service) => <ServiceCard key={service.slug} service={service} />)}</div>
+          <FoundationsServiceGrid services={awsServices} />
         </div>
       </section>
 
