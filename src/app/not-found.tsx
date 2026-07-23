@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { brand } from "@/config/brand";
 
 const startingPoints = [
   { href: "/learn/iam", label: "IAM", description: "Tożsamość i dostęp" },
@@ -47,12 +48,12 @@ export default function NotFound() {
             </div>
             <div className="p-5 font-mono text-xs leading-7 sm:p-7 sm:text-sm">
               <p><span className="text-slate-500">STATUS:</span> <span className="text-sky-300">RESOURCE_NOT_FOUND</span></p>
-              <p><span className="text-slate-500">REGION:</span> <span className="text-slate-300">aws-cloud-lab</span></p>
+              <p><span className="text-slate-500">ENVIRONMENT:</span> <span className="text-slate-300">{brand.slug}</span></p>
               <p><span className="text-slate-500">ACTION:</span> <span className="text-slate-300">RETURN_TO_SAFE_ROUTE</span></p>
               <div aria-hidden="true" className="mt-8 flex items-center gap-3">
                 <span className="size-3 rounded-full border-2 border-sky-400 bg-[#0b1728]" />
                 <span className="h-px grow border-t border-dashed border-sky-400/40" />
-                <span className="grid size-9 place-items-center rounded-lg border border-sky-400/30 bg-sky-400/10 text-[10px] font-bold text-sky-300">ACL</span>
+                <span className="grid size-9 place-items-center rounded-lg border border-sky-400/30 bg-sky-400/10 text-[10px] font-bold text-sky-300">{brand.mark}</span>
               </div>
             </div>
           </div>

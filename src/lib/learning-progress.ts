@@ -1,5 +1,8 @@
 import type { LearningProgress, ModuleProgress } from "@/types/learning-progress";
+import type { LearningModuleId, LearningModuleSlug, LearningTrackId } from "@/types/learning-catalog";
+import { getLearningModule, getModulesForTrack, isLearningModuleSlug } from "@/data/learning-tracks";
 
+// The historical key and slug-based module keys remain unchanged for backward compatibility.
 export const LEARNING_PROGRESS_KEY = "aws-cloud-lab-progress";
 export const LEARNING_PROGRESS_EVENT = "aws-cloud-lab-progress-change";
 
@@ -44,10 +47,10 @@ export function parseLearningProgress(raw: string | null): LearningProgress {
   try {
     const value: unknown = JSON.parse(raw);
     if (!isRecord(value) || value.version !== 1 || !isRecord(value.modules)) return createEmptyProgress();
-    const modules: Record<string, ModuleProgress> = {};
+    const modules: Partial<Record<LearningModuleSlug, ModuleProgress>> = {};
     for (const [slug, moduleValue] of Object.entries(value.modules)) {
       const parsedModule = parseModuleProgress(moduleValue);
-      if (parsedModule) modules[slug] = parsedModule;
+      if (parsedModule && isLearningModuleSlug(slug)) modules[slug] = parsedModule;
     }
     return { version: 1, modules };
   } catch {
@@ -64,15 +67,36 @@ export function readLearningProgress(storage?: Pick<Storage, "getItem">): Learni
   }
 }
 
-export function getModuleProgress(progress: LearningProgress, moduleSlug: string) {
+export function getModuleProgress(progress: LearningProgress, moduleSlug: LearningModuleSlug) {
   return progress.modules[moduleSlug];
 }
 
-export function countCompletedModules(progress: LearningProgress, allowedSlugs?: string[]) {
-  return Object.entries(progress.modules).filter(([slug, module]) => module.completed && (!allowedSlugs || allowedSlugs.includes(slug))).length;
+export function getModuleStorageKey(moduleId: LearningModuleId): LearningModuleSlug {
+  const learningModule = getLearningModule(moduleId);
+  if (!learningModule) throw new Error(`Unknown learning module: ${moduleId}`);
+  return learningModule.slug;
 }
 
-export function applyCompletedAttempt(progress: LearningProgress, moduleSlug: string, score: number, totalQuestions: number, passingScore: number, attemptedAt: string): LearningProgress {
+export function getTrackProgress(trackId: LearningTrackId, progress: LearningProgress) {
+  const modules = getModulesForTrack(trackId);
+  const completed = modules.filter((learningModule) => learningModule.quizAvailable && progress.modules[getModuleStorageKey(learningModule.id)]?.completed).length;
+  const total = modules.length;
+  return { completed, total, percentage: total > 0 ? Math.round((completed / total) * 100) : 0 };
+}
+
+export function getRecommendedModule(trackId: LearningTrackId, progress: LearningProgress) {
+  return getModulesForTrack(trackId).find((learningModule) => !learningModule.quizAvailable || !progress.modules[getModuleStorageKey(learningModule.id)]?.completed);
+}
+
+export function getModuleStatus(trackId: LearningTrackId, progress: LearningProgress, moduleId: LearningModuleId) {
+  const learningModule = getLearningModule(moduleId);
+  if (!learningModule || learningModule.trackId !== trackId) return undefined;
+  if (learningModule.quizAvailable && progress.modules[getModuleStorageKey(moduleId)]?.completed) return "completed" as const;
+  if (getRecommendedModule(trackId, progress)?.id === moduleId) return "recommended" as const;
+  return undefined;
+}
+
+export function applyCompletedAttempt(progress: LearningProgress, moduleSlug: LearningModuleSlug, score: number, totalQuestions: number, passingScore: number, attemptedAt: string): LearningProgress {
   const previous = progress.modules[moduleSlug];
   const passed = score >= passingScore;
   const completed = Boolean(previous?.completed || passed);
@@ -92,7 +116,7 @@ export function applyCompletedAttempt(progress: LearningProgress, moduleSlug: st
   };
 }
 
-export function saveCompletedAttempt(moduleSlug: string, score: number, totalQuestions: number, passingScore: number): LearningProgress {
+export function saveCompletedAttempt(moduleSlug: LearningModuleSlug, score: number, totalQuestions: number, passingScore: number): LearningProgress {
   const progress = applyCompletedAttempt(readLearningProgress(), moduleSlug, score, totalQuestions, passingScore, new Date().toISOString());
   try {
     window.localStorage.setItem(LEARNING_PROGRESS_KEY, JSON.stringify(progress));

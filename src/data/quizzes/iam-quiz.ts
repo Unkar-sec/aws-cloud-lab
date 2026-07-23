@@ -2,6 +2,9 @@ import type { QuizDefinition } from "@/types/quiz";
 
 export const iamQuiz = {
   id: "iam-foundations",
+  providerId: "aws",
+  trackId: "aws-foundations",
+  moduleId: "aws:iam",
   moduleSlug: "iam",
   title: "Quiz IAM",
   description: "Sprawdź znajomość tożsamości, polityk i bezpiecznego nadawania dostępu w AWS.",

@@ -1,13 +1,17 @@
 "use client";
 
 import { useState, useSyncExternalStore, type FormEvent } from "react";
-import { saveCompletedAttempt } from "@/lib/learning-progress";
+import { getTrackProgress, saveCompletedAttempt } from "@/lib/learning-progress";
 import { shuffleQuestionAnswers } from "@/lib/shuffle";
+import { getLearningModule, getLearningTrack, getNextLearningModule } from "@/data/learning-tracks";
 import type { QuizDefinition } from "@/types/quiz";
 import { QuizQuestion } from "./quiz-question";
 import { QuizResult } from "./quiz-result";
 
 export function QuizRunner({ quiz }: { quiz: QuizDefinition }) {
+  const learningModule = getLearningModule(quiz.moduleId);
+  const learningTrack = getLearningTrack(quiz.trackId);
+  const nextModule = getNextLearningModule(quiz.moduleId);
   const isClient = useSyncExternalStore(subscribeToClient, () => true, () => false);
   const [attemptQuestions, setAttemptQuestions] = useState(() => shuffleQuestionAnswers(quiz.questions));
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -16,6 +20,7 @@ export function QuizRunner({ quiz }: { quiz: QuizDefinition }) {
   const [score, setScore] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
+  const [completedTrackProgress, setCompletedTrackProgress] = useState<{ completed: number; total: number } | null>(null);
   const question = attemptQuestions[questionIndex];
   const isCorrect = selectedAnswerId === question.correctAnswerId;
   const correctAnswer = question.answers.find((answer) => answer.id === question.correctAnswerId);
@@ -34,7 +39,8 @@ export function QuizRunner({ quiz }: { quiz: QuizDefinition }) {
 
   function continueQuiz() {
     if (questionIndex === quiz.questions.length - 1) {
-      saveCompletedAttempt(quiz.moduleSlug, score, quiz.questions.length, quiz.passingScore);
+      const savedProgress = saveCompletedAttempt(quiz.moduleSlug, score, quiz.questions.length, quiz.passingScore);
+      setCompletedTrackProgress(getTrackProgress(quiz.trackId, savedProgress));
       setIsComplete(true);
       return;
     }
@@ -42,6 +48,7 @@ export function QuizRunner({ quiz }: { quiz: QuizDefinition }) {
     setSelectedAnswerId(null);
     setIsSubmitted(false);
     setValidationMessage("");
+    setCompletedTrackProgress(null);
   }
 
   function retryQuiz() {
@@ -56,7 +63,7 @@ export function QuizRunner({ quiz }: { quiz: QuizDefinition }) {
 
   if (!isClient) return <QuizLoadingState />;
 
-  if (isComplete) return <QuizResult score={score} total={quiz.questions.length} passingScore={quiz.passingScore} onRetry={retryQuiz} />;
+  if (isComplete && learningModule && learningTrack) return <QuizResult moduleSlug={learningModule.slug} moduleName={learningModule.name} trackName={learningTrack.name} trackProgress={completedTrackProgress} nextModuleSlug={nextModule?.slug ?? null} nextModuleName={nextModule?.name ?? null} score={score} total={quiz.questions.length} passingScore={quiz.passingScore} onRetry={retryQuiz} />;
 
   return (
     <section aria-labelledby="quiz-progress-label" className="rounded-2xl border border-white/10 bg-[#0b1728]/90 p-5 sm:p-8">

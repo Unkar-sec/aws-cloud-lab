@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { brand } from "@/config/brand";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,10 +17,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "AWS Cloud Lab — nauka AWS od podstaw",
-    template: "%s | AWS Cloud Lab",
+    default: `${brand.name} — praktyczna nauka chmury`,
+    template: `%s | ${brand.name}`,
   },
-  description: "Polski portal edukacyjny, który pomaga poznać podstawowe usługi AWS krok po kroku.",
+  description: brand.description,
 };
 
 export default function RootLayout({

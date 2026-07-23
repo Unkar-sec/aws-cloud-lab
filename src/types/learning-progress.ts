@@ -1,3 +1,5 @@
+import type { LearningModuleSlug } from "@/types/learning-catalog";
+
 export type ModuleProgress = {
   completed: boolean;
   bestScore: number;
@@ -9,5 +11,5 @@ export type ModuleProgress = {
 
 export type LearningProgress = {
   version: 1;
-  modules: Record<string, ModuleProgress>;
+  modules: Partial<Record<LearningModuleSlug, ModuleProgress>>;
 };
