@@ -11,6 +11,7 @@ export function SiteHeader() {
         </Link>
         <nav aria-label="Główna nawigacja" className="flex items-center gap-4 text-sm text-slate-300 sm:gap-6">
           <Link href="/#sciezki" className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400">Ścieżki</Link>
+          <Link href="/scenarios" className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400">Scenariusze</Link>
           <Link href="/#jak-to-dziala" className="hidden transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400 sm:block">Jak to działa</Link>
           <Link href="/#o-projekcie" className="hidden transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400 lg:block">O projekcie</Link>
           <Link href="/learn/iam" className="rounded-lg bg-sky-400 px-4 py-2 font-semibold text-slate-950 transition hover:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400">Rozpocznij naukę</Link>

@@ -3,8 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { awsServices, getService } from "@/data/aws-services";
 import { ModuleQuizCallout } from "@/components/progress/module-quiz-callout";
+import { ModuleScenariosCallout } from "@/components/scenarios/module-scenarios-callout";
 import { getQuizForModule } from "@/data/quizzes";
 import { getLearningModule, getLearningTrack, getNextLearningModule } from "@/data/learning-tracks";
+import { getAllScenarios } from "@/data/scenarios";
+import { getScenariosRelatedToModule } from "@/lib/scenario-dashboard";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -29,6 +32,17 @@ export default async function ServiceTutorial({ params }: PageProps) {
   const nextLearningModule = getNextLearningModule(learningModule.id);
   const nextService = nextLearningModule ? getService(nextLearningModule.slug) : null;
   const quiz = getQuizForModule(service.slug);
+  const relatedScenarios = getScenariosRelatedToModule(getAllScenarios(), service.id, 3).map(
+    ({ id, slug: scenarioSlug, title, summary, moduleCallout, difficulty, estimatedMinutes }) => ({
+      id,
+      slug: scenarioSlug,
+      title,
+      summary,
+      moduleCallout,
+      difficulty,
+      estimatedMinutes,
+    }),
+  );
 
   return (
     <main className="min-h-[75vh]">
@@ -108,6 +122,7 @@ export default async function ServiceTutorial({ params }: PageProps) {
             <Link href="/#uslugi" className="rounded-lg border border-white/15 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400">Wróć do wszystkich usług</Link>
           </div>
         </section>}
+        <ModuleScenariosCallout scenarios={relatedScenarios} />
       </div>
     </main>
   );

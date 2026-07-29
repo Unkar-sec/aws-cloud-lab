@@ -1,6 +1,6 @@
 # CloudOps Lab
 
-CloudOps Lab to niezależna platforma edukacyjna do praktycznej nauki chmury, DevOps i bezpieczeństwa. Tutoriale, quizy i przyszłe scenariusze pomagają rozwijać umiejętności infrastrukturalne bez wiązania całej platformy z jednym dostawcą chmury.
+CloudOps Lab to niezależna platforma edukacyjna do praktycznej nauki chmury, DevOps i bezpieczeństwa. Tutoriale, quizy i symulowane scenariusze pomagają rozwijać umiejętności infrastrukturalne bez wiązania całej platformy z jednym dostawcą chmury.
 
 ## Niezależny projekt
 
@@ -33,6 +33,15 @@ AWS Foundations:
 - postęp liczony osobno dla AWS Foundations,
 - rekomendowanie kolejnego modułu w obrębie ścieżki,
 - obsługa ukończenia pełnej ścieżki,
+- uniwersalny, data-driven silnik symulowanych scenariuszy,
+- lista praktycznych scenariuszy: `IAM Access Denied` oraz symulowane scenariusze diagnostyczne `Prywatny obiekt S3 zwraca 403`, `EC2 nie odpowiada przez HTTP`, `Lambda w VPC nie ma dostępu do internetu`, `Alarm CloudWatch obserwuje niewłaściwą funkcję` i `S3 nie uruchamia funkcji Lambda`,
+- symulowany scenariusz diagnostyczny alarmu CloudWatch obejmujący Namespace, MetricName, Dimensions oraz analizę metryk i logów funkcji Lambda,
+- symulowany scenariusz diagnostyczny integracji S3 z Lambda obejmujący Event Notification, filtry prefix i suffix oraz rozróżnienie braku wywołania od błędu wykonania,
+- dashboard praktycznych scenariuszy z postępem całego zestawu, trzema statusami, rekomendacją następnego ćwiczenia oraz ekranem ukończenia,
+- filtrowanie scenariuszy po statusie, trudności i module oraz sortowanie bez zmiany katalogu,
+- ogólne powiązania tutoriali ze scenariuszami wraz ze statusem, trudnością i czasem,
+- briefing incydentu, analiza logów i polityk, diagnoza oraz pełny debrief,
+- osobny, wersjonowany zapis postępu scenariuszy w `localStorage`,
 - architektura neutralna względem dostawców chmury,
 - własna strona błędu 404,
 - polski interfejs i dostępna nawigacja klawiaturą.
@@ -56,12 +65,11 @@ Aplikacja będzie dostępna pod adresem [http://localhost:3000](http://localhost
 
 ## Planowane kierunki
 
-- rozbudowany ekran ukończenia ścieżki,
-- symulowany scenariusz IAM Access Denied,
-- symulowany scenariusz S3 Access Denied,
-- symulowany scenariusz EC2 nie odpowiada,
-- logowanie,
-- backend AWS,
-- prawdziwe laboratoria chmurowe.
+- prawdziwe środowiska AWS i automatyczna walidacja zasobów,
+- prawdziwe alarmy CloudWatch i integracja z kontem AWS,
+- rzeczywiste Event Notifications,
+- CDK, prawdziwe zasoby AWS, przepływ deploy/check/reset/destroy, automatyczny checker oraz automatyczny reset i cleanup środowisk,
+- backend i konta użytkowników,
+- synchronizacja postępu między urządzeniami.
 
-Założenia neutralnej architektury opisuje [dokument platformy](docs/architecture/provider-neutral-platform.md).
+Założenia neutralnej architektury opisuje [dokument platformy](docs/architecture/provider-neutral-platform.md), a budowę symulacji [dokument silnika scenariuszy](docs/architecture/scenario-engine.md).

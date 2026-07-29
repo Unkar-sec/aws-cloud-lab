@@ -6,8 +6,11 @@ import { LearningTracksSection } from "@/components/learning-tracks-section";
 import { awsServices } from "@/data/aws-services";
 import { brand } from "@/config/brand";
 import { AWS_FOUNDATIONS_TRACK_ID } from "@/data/learning-tracks";
+import { HomeScenariosProgress } from "@/components/scenarios/home-scenarios-progress";
+import { getAllScenarios } from "@/data/scenarios";
 
 export default function Home() {
+  const scenarios = getAllScenarios();
   return (
     <main>
       <section className="relative isolate overflow-hidden border-b border-white/10">
@@ -56,7 +59,17 @@ export default function Home() {
             <LearningStep number={3} title="Rozwiąż scenariusz" />
             <LearningStep number={4} title="Zdobądź osiągnięcie" />
           </ol>
-          <p className="mt-7 max-w-3xl text-sm leading-6 text-slate-400">Dostępne są tutoriale oraz quizy IAM, S3, EC2, VPC, Lambda i CloudWatch. Symulowane scenariusze i kolejne formaty nauki pojawią się w następnych etapach rozwoju projektu.</p>
+          <p className="mt-7 max-w-3xl text-sm leading-6 text-slate-400">Dostępne są tutoriale i quizy IAM, S3, EC2, VPC, Lambda i CloudWatch oraz praktyczne, symulowane scenariusze diagnostyczne.</p>
+        </div>
+      </section>
+
+      <section id="scenariusze" className="scroll-mt-20 border-b border-white/10 py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <p className="text-sm font-semibold text-sky-300">Od wiedzy do diagnozy</p>
+          <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Praktyczne scenariusze</h2>
+          <p className="mt-4 max-w-3xl leading-7 text-slate-300">Zastosuj wiedzę z tutoriali podczas diagnozowania symulowanych incydentów.</p>
+          <p className="mt-2 text-sm text-slate-400">Ukończenie modułu IAM jest rekomendowane, ale dostęp do scenariusza nie jest blokowany.</p>
+          <HomeScenariosProgress scenarios={scenarios} />
         </div>
       </section>
 
